@@ -30,11 +30,13 @@ TMAG5273::TMAG5273()
 /// and set the wire for the I2C communication
 /// @param sensorAddress I2C address of the sensor
 /// @param wirePort I2C port to use for communication, defaults to Wire
+/// @param opMode Operating mode to set the TMAG to, defaults to Standby Mode   
 /// @return Error code (1 is success, 0 is failure, negative is warning)
-int8_t TMAG5273::begin(uint8_t sensorAddress, TwoWire &wirePort)
+int8_t TMAG5273::begin(uint8_t sensorAddress, TwoWire &wirePort, uint8_t opMode)
 {
     _i2cPort = &wirePort;           // Chooses the wire port of the device
     _deviceAddress = sensorAddress; // Sets the address of the device
+    _triggerLatch = 0x00;           // Sets the trigger latch to 0
 
     // Makes sure the TMAG will acknowledge over I2C along with matching Device ID's
     if (isConnected() != 0)
@@ -45,7 +47,7 @@ int8_t TMAG5273::begin(uint8_t sensorAddress, TwoWire &wirePort)
     // Following the Detailed Design Prodedure on page 42 of the datasheet
     setMagneticChannel(TMAG5273_X_Y_Z_ENABLE);
     setTemperatureEn(true);
-    setOperatingMode(TMAG5273_CONTINUOUS_MEASURE_MODE);
+    setOperatingMode(opMode);
 
     // Set the axis ranges for the device to be the largest
     setXYAxisRange(TMAG5273_RANGE_80MT);
@@ -152,8 +154,11 @@ int8_t TMAG5273::writeRegisters(uint8_t regAddress, uint8_t *dataBuffer, uint8_t
     //  Begin transmission
     Wire.beginTransmission(_deviceAddress);
 
-    // Write the address
-    Wire.write(regAddress);
+    // Write the address - if the trigger latch is set, it will be included
+    Wire.write(_triggerLatch | regAddress);
+     // Clear the trigger latch after writing
+    clearTriggerLatch();
+
 
     // Write all the data
     for (uint8_t i = 0; i < numBytes; i++)
@@ -2679,4 +2684,34 @@ float TMAG5273::getMagnitudeResult()
     magReg = readRegister(TMAG5273_REG_MAGNITUDE_RESULT);
 
     return magReg;
+}
+
+/************************************************************************************************/
+/************************         TRIGGER FUNCTIONS.                     ************************/
+/************************************************************************************************/
+
+/// @brief This function arms the trigger latch. The next command write operation will have
+/// the trigger bit enabled. The trigger bit is cleared after a write.
+void TMAG5273::armTriggerLatch()
+{
+    // Write to the trigger latch register
+    _triggerLatch = TMAG52573_TRIGGER_BIT;
+}
+
+void TMAG5273::clearTriggerLatch()
+{
+    // Clear the trigger latch bit
+    _triggerLatch = 0;
+}
+
+bool TMAG5273::isTriggerLatchSet()
+{
+    if(_triggerLatch == 0x80)
+    {
+        return true; // Trigger latch is set
+    }
+    else
+    {
+        return false; // Trigger latch is not set
+    }   
 }

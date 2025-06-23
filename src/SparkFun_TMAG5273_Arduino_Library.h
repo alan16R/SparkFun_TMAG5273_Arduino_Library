@@ -31,7 +31,8 @@ class TMAG5273
 
     int8_t begin(uint8_t sensorAddress = 0X22,
                  TwoWire &wirePort =
-                     Wire); // Checks for ACK over I2C, and sets the device ID of the TMAG and chooses the wire port
+                     Wire,
+                    uint8_t opMode = TMAG5273_STANDY_BY_MODE); // Checks for ACK over I2C, and sets the device ID of the TMAG and chooses the wire port
     int8_t isConnected();   // Checks for I2C address verification along with the device address
     int8_t setupWakeUpAndSleep(); // Sets the device to be in Wake Up and Sleep Mode
 
@@ -126,7 +127,11 @@ class TMAG5273
     uint8_t getDeviceStatus(); // Returns the error detected
     int8_t getError();         // Returns an error code (0 is success, negative is failure, positive is warning)
 
-  private:
+    void armTriggerLatch(); // Sets the trigger latch in preparation for a trigger event
+    void clearTriggerLatch(); // Clears the trigger latch
+    bool isTriggerLatchSet(); // Returns the trigger latch state
+
+private:
     // I2C Communication interface settings
     TwoWire *_i2cPort = NULL;
     uint8_t _deviceAddress;
@@ -136,6 +141,8 @@ class TMAG5273
     uint8_t readRegister(uint8_t regAddress);
     uint8_t writeRegister(uint8_t regAddress, uint8_t data);
     bool ping(uint8_t i2c_address); // Checks for device presence
+
+    uint8_t _triggerLatch;
 };
 
 #endif

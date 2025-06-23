@@ -123,6 +123,10 @@ Features as per datasheet
 #define TMAG5273_INT_PIN_ENABLE 0X0  // INT pin is enabled
 #define TMAG5273_INT_PIN_DISABLE 0X1 // INT pin is disabled (for wake-up and trigger functions)
 
+#define TMAG5273_INT_PIN_LATCHED 0X0 // INT pin is latched
+#define TMAG5273_INT_PIN_PULSED 0X1  // INT pin is pulsed
+
+
 #define TMAG5273_I2C_ADDRESS_CHANGE_DISABLE 0X0 // Disable update of I2C address
 #define TMAG5273_I2C_ADDRESS_CHANGE_ENABLE 0X1  // Enable update of I2C address
 
@@ -135,6 +139,11 @@ Features as per datasheet
 #define TMAG5273_INT_ERROR_UNDETECTED 0X0 // No INT error detected
 #define TMAG5273_INT_ERROR_DETECTED 0X1   // INT error detected
 
+#define TMAG52573_TRIGGER_BIT 0X80 // Trigger bit for the TMAG5273 device
+
+#define TMAG5273_MAGNETIC_TEMP_COMPENSATION_OFF 0X0 // Enable magnetic temperature compensation
+#define TMAG5273_MAGNETIC_TEMP_COMPENSATION_NDFBE 0X1  // Disable magnetic temperature compensation
+#define TMAG5273_MAGNETIC_TEMP_COMPENSATION_CERAMIC 0X3 // Enable magnetic temperature compensation
 
 /********************************** Register Definitions **********************************/
 enum TMAG5273_Register

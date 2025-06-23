@@ -4,6 +4,18 @@ SparkFun TMAG5273 Arduino Library
 
 This is the SparkFun library for the Texas Instruments TMAG5273 low-power linear 3D Hall-effect sensor with I<sup>2</sup>C interface as used on the [SparkFun IoT Motor Driver (ESP32 WROOM, TMC6300)](https://www.sparkfun.com/products/22132). 
 
+### Version 1.1.0
+
+Added support for the "Trigger Mode". This doesn't seem to be supported in the original version and requires that bit 7 of the address register is set to 1 to trigger a conversion. I've done this by adding an extra call to 'arm' the trigger condition, and the next write to an address register ORs this bit in with the address and then the latch is cleared.
+
+TODO: Add example with 'Trigger Mode".
+
+TODO: Produce a working interrupt example.
+
+
+
+
+
 Repository Contents
 -------------------
 
@@ -21,6 +33,11 @@ Documentation
 * **[Installing an Arduino Library Guide](https://learn.sparkfun.com/tutorials/installing-an-arduino-library)** - Basic information on how to install an Arduino library.
 * **[Hookup Guide](https://docs.sparkfun.com/SparkFun_IoT_Brushless_Motor_Driver)** - Basic hookup guide for the SparkFun IoT Motor Driver Breakout (ESP32, TMC6300).
 * **[Product Repository](https://github.com/sparkfun/SparkFun_IoT_Brushless_Motor_Driver)** - Main repository for the IoT Motor Driver (including hardware files)
+
+
+
+
+
 
 License Information
 -------------------
