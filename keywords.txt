@@ -91,6 +91,9 @@ getMagnitudeResult KEYWORD2
 getInterruptPinStatus KEYWORD2
 getDeviceStatus KEYWORD2
 getError KEYWORD2
+armTriggerLatch  KEYWORD2
+clearTriggerLatch  KEYWORD2
+isTriggerLatchSet  KEYWORD2
 
 #########################################################
 # Constants
